@@ -4,11 +4,11 @@
       "title": "Senior Front-End Developer",
       "type": "Полная занятость",
       "location": "Москва",
-      "description": "Ищем талантливого разработчика в наш головной офис в Москве. The ideal candidate will have strong skills in HTML, CSS, and JavaScript, with experience working with modern JavaScript frameworks such as Vue or Angular.",
+      "description": "Ищем талантливого разработчика в наш головной офис в Москве. У идеального для нас кандидата отличные знания HTML, CSS, JavaScript, а также богатый опыт работы с фреймворками, в частности - Vue и Angular.",
       "salary": "От 250 000 ₽",
       "company": {
         "name": "ООО Новотех Солюшнс",
-        "description": "ООО Новотех Решения is a leading technology company specializing in web development and digital solutions. We pride ourselves on delivering high-quality products and services to our clients while fostering a collaborative and innovative work environment.",
+        "description": "Новотех - лидер на рынке компаний, специализирующихся на веб-разработке и цифровых решениях. Мы гордимся тем, что выпускаем на рынок высококачественные продукты и сервисы для наших клиентов.",
         "contactEmail": "contact@teksolutions.com",
         "contactPhone": "555-555-5555"
       },
@@ -18,12 +18,12 @@
       "id": "2",
       "title": "Front-End Developer (React, Vue)",
       "type": "Полная занятость",
-      "description": "Присоединяйся к нашей команде для работы в уютном офисе в центре Санкт-Петербурга. We are looking for a motivated individual with a passion for crafting beautiful and responsive web applications. Experience with UI/UX design principles and a strong attention to detail are highly desirable.",
+      "description": "Присоединяйся к нашей команде для работы в уютном офисе в центре Санкт-Петербурга. Мы в поиске мотивированного специалиста со страстью к созданию красивых и отзывчивых веб-приложений. Приветствуются знания принципов UI/UX и внимание к деталям.",
       "location": "Санкт-Петербург",
       "salary": "От 80 000 ₽",
       "company": {
         "name": "ООО Венера Груп",
-        "description": "Veneer Solutions is a creative agency specializing in digital design and development. Our team is dedicated to pushing the boundaries of creativity and innovation to deliver exceptional results for our clients.",
+        "description": "Венера Груп - креативное агенство, специализирующееся на дизайне и разработке. Наша команда настроена раздвигать границы креативности и инноваций для предоставления бескомпромисных решений нашим клиентам.",
         "contactEmail": "contact@loremipsum.com",
         "contactPhone": "555-555-5555"
       }
@@ -32,12 +32,12 @@
       "id": "3",
       "title": "Vue.js Developer",
       "type": "Полная занятость",
-      "description": "Обожаешь свою профессию? Присоединяйся к нашей команде в Нижнем Новгороде, and work on exciting projects that make a difference. We offer competitive compensation and a collaborative work environment where your ideas are valued.",
+      "description": "Обожаешь свою профессию? Присоединяйся к нашей команде в Нижнем Новгороде для работы над интересными проектами, приближающими будущее. Мы предлагаем конкурентную зарплату и работу в команде, в которой твои идеи ценятся.",
       "location": "Нижний Новгород",
       "salary": "От 70 000 ₽",
       "company": {
         "name": "ООО Нижний Клауд",
-        "description": "Nizhny Cloud is a leading technology company specializing in digital solutions for businesses of all sizes. With a focus on innovation and customer satisfaction, we are committed to delivering cutting-edge products and services.",
+        "description": "Мы - лидирующая компания в сфере цифровых решений для бизнеса любого масштаба. Фокусируемся на инновациях и удовлетворении потребностей наших пользователей. Наша цель - предоставление непревзойденных продуктов и сервисов.",
         "contactEmail": "contact@dolorsitamet.com",
         "contactPhone": "555-555-5555"
       }
@@ -46,12 +46,12 @@
       "id": "4",
       "title": "Node.js Developer",
       "type": "Частичная занятость",
-      "description": "В связи с расширением деятельности ищем нового сотрудника для проектной работы. We are looking for a self-motivated individual with a passion for creating engaging user experiences. This position offers flexible hours and the opportunity to work remotely.",
+      "description": "В связи с расширением деятельности ищем нового сотрудника для проектной работы. Мы ожидаем, что ты самостоятельный разработчик, нацеленный на достижение результата. Данная должность предполагает гибкий график и возможность работать удаленно.",
       "location": "Рязань",
       "salary": "60 000 ₽ - 90 000 ₽",
       "company": {
         "name": "ООО Альфа Элита",
-        "description": "Alpha Elite is a dynamic startup specializing in digital marketing and web development. We are committed to fostering a diverse and inclusive workplace where creativity and innovation thrive.",
+        "description": "Наша компания - динамично развивающийся стартап, специализирующийся на цифровом маркетинге и разработке. Мы нацелены на поддержание комфортной атмосферы внутри коллектива, в котором процветают креативность и командный дух.",
         "contactEmail": "contact@adipisicingelit.com",
         "contactPhone": "555-555-5555"
       }
@@ -60,12 +60,12 @@
       "id": "5",
       "title": "Full Stack Web Developer",
       "type": "Полная занятость",
-      "description": "Уникальная возможность для разработчика принять участие в создании сервисов будущего. We are seeking a talented individual with a passion for building elegant and scalable web applications. Join our team and make an impact!",
+      "description": "Уникальная возможность для разработчика принять участие в создании сервисов будущего. Мы в поиске талантливых специалистов, любящих создавать элегантные, при этом масштабируемые веб-приложения. Присоединяйся к нам и внеси свой вклад!",
       "location": "Владимир",
       "salary": "От 100 000 ₽",
       "company": {
         "name": "ООО Воронов Технолоджи",
-        "description": "Browning Technologies is a rapidly growing technology company specializing in e-commerce solutions. We offer a dynamic and collaborative work environment where employees are encouraged to think creatively and innovate.",
+        "description": "Мы - стремительно растущая компания на рынке e-commerce. Наша компания предлагает рабочую атмосферу, в которой сотрудники поощряются мыслить креативно и применять нестандартные подходы.",
         "contactEmail": "contact@consecteturadipisicing.com",
         "contactPhone": "555-555-5555"
       }
@@ -74,12 +74,12 @@
       "id": "6",
       "title": "React Native Developer",
       "type": "Полная занятость",
-      "description": "Присоединяйся к команде талантливых фронтенд-разработчиков из Пскова. We are looking for a skilled and enthusiastic individual to help us create innovative web solutions. Competitive salary and great benefits package available.",
+      "description": "Присоединяйся к команде талантливых разработчиков. Будем рады видеть в своих рядах опытного энтузиаста своего дела, который будет вместе с нами создавать мобильные приложения настоящего и будущего. У нас ты найдешь конкурентную зарплату и много приятных бонусов.",
       "location": "Псков",
       "salary": "До 110 000 ₽",
       "company": {
         "name": "ООО Чудо-озеро",
-        "description": "Port Solutions is a leading technology company specializing in software development and digital marketing. We are committed to providing our clients with cutting-edge solutions and our employees with a supportive and rewarding work environment.",
+        "description": "Будучи одним из лидеров в цифровом маркетинге и разработке ПО, наша компания ставит целью предоставление передовых решений для наших клиентов. Мы настроены на создание для наших сотрудников атмосферы взаимовыручки и поддержки.",
         "contactEmail": "contact@ipsumlorem.com",
         "contactPhone": "555-555-5555"
       }

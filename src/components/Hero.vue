@@ -4,7 +4,7 @@ import { defineProps } from "vue"
 defineProps({
   title: {
     type: String,
-    default: "Более 146 000 вакансий",
+    default: "Более 100 000 вакансий",
   },
   subtitle: {
     type: String,
