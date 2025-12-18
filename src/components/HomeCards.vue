@@ -18,7 +18,7 @@ import Card from "./Card.vue"
         <Card bg="bg-green-100">
           <h2 class="text-2xl font-bold">Для работодателей</h2>
           <p class="mt-2 mb-4">
-            Размести свою вакансию для подбора лучшего специалиста
+            Разместите свою вакансию для подбора лучшего специалиста
           </p>
           <a
             href="add-job.html"

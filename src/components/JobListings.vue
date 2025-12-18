@@ -7,6 +7,10 @@ const jobs = ref(jobData.jobs)
 
 defineProps({
   limit: Number,
+  showButton: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -24,6 +28,13 @@ defineProps({
         />
       </div>
     </div>
+  </section>
+  <section class="m-auto max-w-lg my-10 px-6" v-if="showButton">
+    <a
+      href="/jobs"
+      class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
+      >Посмотреть все вакансии</a
+    >
   </section>
 </template>
 
