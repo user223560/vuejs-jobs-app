@@ -1,7 +1,12 @@
 <script setup>
-import { RouterLink } from "vue-router"
+import { RouterLink, useRoute } from "vue-router"
 
 import logo from "@/assets/img/logo.png"
+
+const isActiveLink = (routePath) => {
+  const route = useRoute()
+  return route.path === routePath
+}
 </script>
 
 <template>
@@ -21,19 +26,43 @@ import logo from "@/assets/img/logo.png"
             <div class="flex space-x-2">
               <RouterLink
                 to="/"
-                class="text-white bg-green-900 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                :class="[
+                  isActiveLink('/')
+                    ? 'bg-green-900'
+                    : 'hover:bg-gray-900 hover:text-white',
+                  'text-white',
+                  'rounded-md',
+                  'px-3',
+                  'py-2',
+                ]"
               >
                 Главная
               </RouterLink>
               <RouterLink
                 to="/jobs"
-                class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2"
+                :class="[
+                  isActiveLink('/jobs')
+                    ? 'bg-green-900'
+                    : 'hover:bg-gray-900 hover:text-white',
+                  'text-white',
+                  'rounded-md',
+                  'px-3',
+                  'py-2',
+                ]"
               >
                 Вакансии
               </RouterLink>
               <RouterLink
                 to="/jobs/add"
-                class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2"
+                :class="[
+                  isActiveLink('/jobs/add')
+                    ? 'bg-green-900'
+                    : 'hover:bg-gray-900 hover:text-white',
+                  'text-white',
+                  'rounded-md',
+                  'px-3',
+                  'py-2',
+                ]"
               >
                 Разместить вакансию
               </RouterLink>
