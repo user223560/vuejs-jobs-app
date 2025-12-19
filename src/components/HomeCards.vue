@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from "vue-router"
+
 import Card from "./Card.vue"
 </script>
 
@@ -9,24 +11,24 @@ import Card from "./Card.vue"
         <Card>
           <h2 class="text-2xl font-bold">Для соискателей</h2>
           <p class="mt-2 mb-4">Легкий и удобный поиск вакансий</p>
-          <a
-            href="jobs.html"
+          <RouterLink
+            to="/jobs"
             class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
           >
             Найти вакансию
-          </a>
+          </RouterLink>
         </Card>
         <Card bg="bg-green-100">
           <h2 class="text-2xl font-bold">Для работодателей</h2>
           <p class="mt-2 mb-4">
             Разместите свою вакансию для подбора лучшего специалиста
           </p>
-          <a
-            href="add-job.html"
+          <RouterLink
+            to="/jobs/add"
             class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600"
           >
             Разместить вакансию
-          </a>
+          </RouterLink>
         </Card>
       </div>
     </div>

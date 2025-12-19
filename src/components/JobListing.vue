@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, ref, computed } from "vue"
+import { RouterLink } from "vue-router"
 
 const props = defineProps({
   job: Object,
@@ -51,12 +52,12 @@ const toggleFullDescription = () => {
           <i class="bi bi-geo-alt text-orange-700"></i>
           {{ job.location }}
         </div>
-        <a
-          :href="'/job/' + job.id"
+        <RouterLink
+          :to="'/job/' + job.id"
           class="h-[36px] bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center text-sm"
         >
           Узнать больше
-        </a>
+        </RouterLink>
       </div>
     </div>
   </div>

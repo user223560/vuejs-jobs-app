@@ -35,7 +35,7 @@ import logo from "@/assets/img/logo.png"
                 to="/jobs/add"
                 class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2"
               >
-                Добавить вакансию
+                Разместить вакансию
               </RouterLink>
             </div>
           </div>
