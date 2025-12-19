@@ -19,6 +19,7 @@ const toggleFullDescription = () => {
   showFullDescription.value = !showFullDescription.value
 }
 </script>
+
 <template>
   <div class="bg-white rounded-xl shadow-md relative">
     <div class="p-4">
@@ -60,4 +61,5 @@ const toggleFullDescription = () => {
     </div>
   </div>
 </template>
+
 <style scoped></style>

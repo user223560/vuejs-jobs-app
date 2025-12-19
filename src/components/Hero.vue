@@ -12,6 +12,7 @@ defineProps({
   },
 })
 </script>
+
 <template>
   <section class="bg-green-700 py-20 mb-4">
     <div
@@ -26,4 +27,5 @@ defineProps({
     </div>
   </section>
 </template>
+
 <style scoped></style>

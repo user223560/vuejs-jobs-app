@@ -33,8 +33,9 @@ defineProps({
     <a
       href="/jobs"
       class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
-      >Посмотреть все вакансии</a
     >
+      Посмотреть все вакансии
+    </a>
   </section>
 </template>
 

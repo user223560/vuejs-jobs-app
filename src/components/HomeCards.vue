@@ -1,6 +1,7 @@
 <script setup>
 import Card from "./Card.vue"
 </script>
+
 <template>
   <section class="py-4">
     <div class="container-xl lg:container m-auto">
@@ -31,4 +32,5 @@ import Card from "./Card.vue"
     </div>
   </section>
 </template>
+
 <style scoped></style>
