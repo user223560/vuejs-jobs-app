@@ -1,24 +1,50 @@
 <script setup>
-import { RouterLink } from "vue-router"
+import { reactive, onMounted, watch } from "vue"
+import { RouterLink, useRoute } from "vue-router"
+
+import PulseLoader from "vue-spinner/src/PulseLoader.vue"
+
+const route = useRoute()
+const jobId = route.params.id
+
+const state = reactive({
+  job: {},
+  isLoading: true,
+})
+
+onMounted(async () => {
+  try {
+    const response = await fetch("/data/jobs.json")
+    const data = await response.json()
+
+    const foundJob = data.jobs.find((job) => job.id === jobId)
+
+    state.job = foundJob || {}
+  } catch (error) {
+    console.error("Ошибка загрузки вакансий", error)
+  } finally {
+    state.isLoading = false
+  }
+})
 </script>
 
 <template>
-  <section class="bg-green-50">
+  <section v-if="!state.isLoading" class="bg-green-50">
     <div class="container m-auto py-10 px-6">
       <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
         <main>
           <div
             class="bg-white p-6 rounded-lg shadow-md text-center md:text-left"
           >
-            <div class="text-gray-500 mb-4">Полная занятость</div>
-            <h1 class="text-3xl font-bold mb-4">Senior Front-End Developer</h1>
+            <div class="text-gray-500 mb-4">{{ state.job.type }}</div>
+            <h1 class="text-3xl font-bold mb-4">{{ state.job.title }}</h1>
             <div
               class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start"
             >
               <i
                 class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"
               ></i>
-              <p class="text-orange-700">Москва</p>
+              <p class="text-orange-700">{{ state.job.location }}</p>
             </div>
           </div>
 
@@ -28,27 +54,22 @@ import { RouterLink } from "vue-router"
             </h3>
 
             <p class="mb-4">
-              Ищем талантливого разработчика в наш головной офис в Москве. У
-              идеального для нас кандидата отличные знания HTML, CSS,
-              JavaScript, а также богатый опыт работы с фреймворками, в
-              частности - Vue и Angular.
+              {{ state.job.description }}
             </p>
 
             <h3 class="text-green-800 text-lg font-bold mb-2">Зарплата</h3>
 
-            <p class="mb-4">От 250 000 ₽</p>
+            <p class="mb-4">{{ state.job.salary }}</p>
           </div>
         </main>
         <aside>
           <div class="bg-white p-6 rounded-lg shadow-md">
             <h3 class="text-xl font-bold mb-6">О работодателе</h3>
 
-            <h2 class="text-2xl">ООО Новотех Солюшнс</h2>
+            <h2 class="text-2xl">{{ state.job.company.name }}</h2>
 
             <p class="my-2">
-              Новотех - лидер на рынке компаний, специализирующихся на
-              веб-разработке и цифровых решениях. Мы гордимся тем, что выпускаем
-              на рынок высококачественные продукты и сервисы для наших клиентов.
+              {{ state.job.company.description }}
             </p>
 
             <hr class="my-4" />
@@ -56,20 +77,23 @@ import { RouterLink } from "vue-router"
             <h3 class="text-xl">Электронная почта:</h3>
 
             <p class="my-2 bg-green-100 p-2 font-bold">
-              contact@newteksolutions.com
+              {{ state.job.company.contactEmail }}
             </p>
 
             <h3 class="text-xl">Телефон:</h3>
 
-            <p class="my-2 bg-green-100 p-2 font-bold">555-555-5555</p>
+            <p class="my-2 bg-green-100 p-2 font-bold">
+              {{ state.job.company.contactPhone }}
+            </p>
           </div>
           <div class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Управление вакансией</h3>
-            <a
-              href="add-job.html"
+            <RouterLink
+              :to="`/jobs/edit/${state.job.id}`"
               class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-              >Редактировать</a
             >
+              Редактировать
+            </RouterLink>
             <button
               class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
             >
@@ -80,6 +104,9 @@ import { RouterLink } from "vue-router"
       </div>
     </div>
   </section>
+  <div v-else class="text-center text-gray-500 py-6">
+    <PulseLoader />
+  </div>
 </template>
 
 <style scoped></style>
