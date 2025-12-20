@@ -16,43 +16,29 @@ defineProps({
 const state = reactive({
   jobs: [],
   isLoading: true,
-  error: null,
 })
 
-// Ф-ция загрузки данных
 const loadJobs = async () => {
   state.isLoading = true
-  state.error = null
 
   try {
+    // Всегда показывать из файла и из локального хранилища
     const response = await fetch("/data/jobs.json")
+    const jsonData = await response.json()
+    const demoJobs = jsonData.jobs || []
 
-    if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}`)
-    }
+    const stored = localStorage.getItem("jobs_app_data")
+    const storageData = stored ? JSON.parse(stored) : {}
+    const userJobs = storageData.jobs || []
 
-    const data = await response.json()
-
-    // Проверка на правильный формат структуры данных
-    if (!data.jobs || !Array.isArray(data.jobs)) {
-      throw new Error("Некорректный формат данных в JSON файле")
-    }
-
-    state.jobs = data.jobs
+    state.jobs = [...demoJobs, ...userJobs] // Сначала новые, потом старые
   } catch (error) {
-    console.error("Ошибка загрузки данных", error)
-    state.error = error.message
+    console.error("Ошибка загрузки", error)
   } finally {
     state.isLoading = false
   }
 }
 
-// Повторная попытка загрузки данных
-const retryLoad = () => {
-  loadJobs()
-}
-
-// Загрузка данных при монтировании
 onMounted(() => {
   loadJobs()
 })
@@ -64,25 +50,11 @@ onMounted(() => {
       <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
         Поиск вакансий
       </h2>
-      <!-- Показываем спиннер во время подгрузки вакансий -->
+
       <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
         <PulseLoader />
-        <p class="mt-2">Загрузка вакансий...</p>
       </div>
 
-      <!-- Состояние ошибки -->
-      <div v-else-if="state.error" class="text-center text-red-500 py-6">
-        <p class="font-semibold">Не удалось загрузить вакансии</p>
-        <p class="text-sm mt-1">{{ state.error }}</p>
-        <button
-          @click="retryLoad"
-          class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Попробовать снова
-        </button>
-      </div>
-
-      <!-- Успешная загрузка -->
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <JobListing
           v-for="job in state.jobs.slice(0, limit || state.jobs.length)"
@@ -92,6 +64,7 @@ onMounted(() => {
       </div>
     </div>
   </section>
+
   <section class="m-auto max-w-lg my-10 px-6" v-if="showButton">
     <RouterLink
       to="/jobs"

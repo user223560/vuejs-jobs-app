@@ -13,12 +13,26 @@ const state = reactive({
   isLoading: true,
 })
 
-onMounted(async () => {
-  try {
-    const response = await fetch("/data/jobs.json")
-    const data = await response.json()
+// Функция загрузки вакансии
+const loadJob = async (id) => {
+  state.isLoading = true
 
-    const foundJob = data.jobs.find((job) => job.id === jobId)
+  try {
+    // 1. Сначала ищем в LocalStorage
+    const storedData = localStorage.getItem("jobs_app_data")
+    let foundJob = null
+
+    if (storedData) {
+      const data = JSON.parse(storedData)
+      foundJob = data.jobs?.find((job) => job.id === id)
+    }
+
+    // 2. Если не нашли, ищем в JSON файле
+    if (!foundJob) {
+      const response = await fetch("/data/jobs.json")
+      const data = await response.json()
+      foundJob = data.jobs?.find((job) => job.id === id)
+    }
 
     state.job = foundJob || {}
   } catch (error) {
@@ -26,7 +40,22 @@ onMounted(async () => {
   } finally {
     state.isLoading = false
   }
+}
+
+// Первоначальная загрузка
+onMounted(() => {
+  loadJob(jobId)
 })
+
+// Следим за изменением ID для SPA-навигации
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (newId) {
+      loadJob(newId)
+    }
+  }
+)
 </script>
 
 <template>
@@ -43,9 +72,7 @@ onMounted(async () => {
             <div
               class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start"
             >
-              <i
-                class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"
-              ></i>
+              <i class="bi bi-geo-alt text-xl text-orange-700 mr-2"></i>
               <p class="text-orange-700">{{ state.job.location }}</p>
             </div>
           </div>
