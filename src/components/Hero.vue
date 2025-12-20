@@ -8,7 +8,7 @@ defineProps({
   },
   subtitle: {
     type: String,
-    default: "Найди работу уже сегодня",
+    default: "Ждут твоего отклика уже сейчас",
   },
 })
 </script>

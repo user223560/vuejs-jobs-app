@@ -1,5 +1,6 @@
 <script setup>
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
+import { useToast } from "vue-toastification"
 
 import router from "@/router"
 
@@ -16,6 +17,56 @@ const form = reactive({
     contactPhone: "",
   },
 })
+
+// Состояния ошибок для каждого поля
+const errors = ref({
+  title: "",
+  location: "",
+  contactEmail: "",
+})
+
+const toast = useToast()
+
+// Валидация формы
+const validateForm = () => {
+  let isValid = true
+
+  // Очищаем предыдущие ошибки
+  errors.value = {
+    title: "",
+    location: "",
+    contactEmail: "",
+  }
+
+  // Проверка названия вакансии
+  if (!form.title.trim()) {
+    errors.value.title = "Обязательно для заполнения"
+    isValid = false
+  }
+
+  // Проверка места работы
+  if (!form.location.trim()) {
+    errors.value.location = "Обязательно для заполнения"
+    isValid = false
+  }
+
+  // Проверка email
+  if (!form.company.contactEmail.trim()) {
+    errors.value.contactEmail = "Обязательно для заполнения"
+    isValid = false
+  } else if (!isValidEmail(form.company.contactEmail)) {
+    errors.value.contactEmail = "Пожалуйста, введите почту в правильном формате"
+    isValid = false
+  }
+
+  return isValid
+}
+
+// Проверка email регулярным выражением
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
 
 // Функция сохранения вакансии в LocalStorage
 const saveJobToLocalStorage = (job) => {
@@ -60,29 +111,31 @@ const saveJobToLocalStorage = (job) => {
 }
 
 const handleSubmit = async () => {
+  // Валидация формы
+  if (!validateForm()) {
+    toast.error("Заполните обязательные поля")
+    return
+  }
+
   try {
-    // Валидация обязательных полей
-    if (!form.title.trim()) {
-      alert("Введите название вакансии")
-      return
-    }
-
-    if (!form.company.contactEmail) {
-      alert("Введите email для связи")
-      return
-    }
-
     // Сохраняем в LocalStorage
     const jobId = saveJobToLocalStorage(form)
 
     // Показываем уведомление
-    alert("Вакансия успешно добавлена!")
+    toast.success("Вакансия успешно опубликована!")
 
     // Перенаправляем на страницу созданной вакансии
     router.push(`/jobs/${jobId}`)
   } catch (error) {
     console.error("Ошибка добавления данных", error)
-    alert("Произошла ошибка при сохранении вакансии")
+    toast.error("Произошла ошибка при публикации вакансии")
+  }
+}
+
+// Сброс ошибки при вводе в поле
+const clearError = (field) => {
+  if (errors.value[field]) {
+    errors.value[field] = ""
   }
 }
 </script>
@@ -93,7 +146,7 @@ const handleSubmit = async () => {
       <div
         class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"
       >
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleSubmit" novalidate>
           <h2 class="text-3xl text-center font-semibold mb-6">
             Добавить вакансию
           </h2>
@@ -107,7 +160,7 @@ const handleSubmit = async () => {
               id="type"
               name="type"
               class="border rounded w-full py-2 px-3"
-              required
+              :class="{ 'border-red-500': errors.title }"
             >
               <option value="Полная занятость">Полная занятость</option>
               <option value="Частичная занятость">Частичная занятость</option>
@@ -118,17 +171,21 @@ const handleSubmit = async () => {
 
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2"
-              >Наименование должности</label
+              >Наименование должности *</label
             >
             <input
               v-model="form.title"
+              @input="clearError('title')"
               type="text"
               id="name"
               name="name"
               class="border rounded w-full py-2 px-3 mb-2"
+              :class="{ 'border-red-500': errors.title }"
               placeholder="напр. Middle Frontend Developer"
-              required
             />
+            <p v-if="errors.title" class="text-red-500 text-sm">
+              {{ errors.title }}
+            </p>
           </div>
           <div class="mb-4">
             <label for="description" class="block text-gray-700 font-bold mb-2"
@@ -146,15 +203,16 @@ const handleSubmit = async () => {
 
           <div class="mb-4">
             <label for="type" class="block text-gray-700 font-bold mb-2"
-              >Зарплата</label
+              >Зарплата *</label
             >
             <select
               v-model="form.salary"
               id="salary"
               name="salary"
               class="border rounded w-full py-2 px-3"
-              required
+              :class="{ 'border-red-500': !form.salary }"
             >
+              <option value="" disabled>Выберите размер зарплаты</option>
               <option value="До 50 000 ₽">До 50 000 ₽</option>
               <option value="50 000 ₽ - 60 000 ₽">50 000 ₽ - 60 000 ₽</option>
               <option value="60 000 ₽ - 70 000 ₽">60 000 ₽ - 70 000 ₽</option>
@@ -175,21 +233,28 @@ const handleSubmit = async () => {
               </option>
               <option value="От 200 000 ₽">От 200 000 ₽</option>
             </select>
+            <p v-if="!form.salary" class="text-red-500 text-sm mt-1">
+              Обязательно для заполнения
+            </p>
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2">
-              Место работы
+              Место работы *
             </label>
             <input
               v-model="form.location"
+              @input="clearError('location')"
               type="text"
               id="location"
               name="location"
               class="border rounded w-full py-2 px-3 mb-2"
+              :class="{ 'border-red-500': errors.location }"
               placeholder="Местонахождение компании"
-              required
             />
+            <p v-if="errors.location" class="text-red-500 text-sm">
+              {{ errors.location }}
+            </p>
           </div>
 
           <h3 class="text-2xl mb-5">Информация о работодателе</h3>
@@ -228,17 +293,21 @@ const handleSubmit = async () => {
             <label
               for="contact_email"
               class="block text-gray-700 font-bold mb-2"
-              >Электронная почта</label
+              >Электронная почта *</label
             >
             <input
               v-model="form.company.contactEmail"
+              @input="clearError('contactEmail')"
               type="email"
               id="contact_email"
               name="contact_email"
               class="border rounded w-full py-2 px-3"
+              :class="{ 'border-red-500': errors.contactEmail }"
               placeholder="Электронная почта для соискателей"
-              required
             />
+            <p v-if="errors.contactEmail" class="text-red-500 text-sm">
+              {{ errors.contactEmail }}
+            </p>
           </div>
           <div class="mb-4">
             <label
@@ -256,12 +325,16 @@ const handleSubmit = async () => {
             />
           </div>
 
+          <div class="text-sm text-gray-500 mb-4">
+            <p>* — обязательные для заполнения поля</p>
+          </div>
+
           <div>
             <button
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Опубликовать вакансию
+              Разместить вакансию
             </button>
           </div>
         </form>
