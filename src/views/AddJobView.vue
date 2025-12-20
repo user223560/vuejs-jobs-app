@@ -21,7 +21,10 @@ const form = reactive({
 // Состояния ошибок для каждого поля
 const errors = ref({
   title: "",
+  description: "",
   location: "",
+  companyName: "",
+  companyDescription: "",
   contactEmail: "",
 })
 
@@ -34,7 +37,10 @@ const validateForm = () => {
   // Очищаем предыдущие ошибки
   errors.value = {
     title: "",
+    description: "",
     location: "",
+    companyName: "",
+    companyDescription: "",
     contactEmail: "",
   }
 
@@ -44,9 +50,27 @@ const validateForm = () => {
     isValid = false
   }
 
+  // Проверка описания вакансии
+  if (!form.description.trim()) {
+    errors.value.description = "Обязательно для заполнения"
+    isValid = false
+  }
+
   // Проверка места работы
   if (!form.location.trim()) {
     errors.value.location = "Обязательно для заполнения"
+    isValid = false
+  }
+
+  // Проверка названия компании
+  if (!form.company.name.trim()) {
+    errors.value.companyName = "Обязательно для заполнения"
+    isValid = false
+  }
+
+  // Проверка описания компании
+  if (!form.company.description.trim()) {
+    errors.value.companyDescription = "Обязательно для заполнения"
     isValid = false
   }
 
@@ -148,7 +172,7 @@ const clearError = (field) => {
       >
         <form @submit.prevent="handleSubmit" novalidate>
           <h2 class="text-3xl text-center font-semibold mb-6">
-            Добавить вакансию
+            Добавление вакансии
           </h2>
 
           <div class="mb-4">
@@ -189,30 +213,34 @@ const clearError = (field) => {
           </div>
           <div class="mb-4">
             <label for="description" class="block text-gray-700 font-bold mb-2"
-              >Описание</label
+              >Описание вакансии *</label
             >
             <textarea
               v-model="form.description"
+              @input="clearError('description')"
               id="description"
               name="description"
               class="border rounded w-full py-2 px-3"
+              :class="{ 'border-red-500': errors.description }"
               rows="4"
               placeholder="Опишите требования, обязанности, ваши ожидания и т.д."
             ></textarea>
+            <p v-if="errors.description" class="text-red-500 text-sm">
+              {{ errors.description }}
+            </p>
           </div>
 
           <div class="mb-4">
             <label for="type" class="block text-gray-700 font-bold mb-2"
-              >Зарплата *</label
+              >Зарплата</label
             >
             <select
               v-model="form.salary"
               id="salary"
               name="salary"
               class="border rounded w-full py-2 px-3"
-              :class="{ 'border-red-500': !form.salary }"
             >
-              <option value="" disabled>Выберите размер зарплаты</option>
+              <option value="">Не указана</option>
               <option value="До 50 000 ₽">До 50 000 ₽</option>
               <option value="50 000 ₽ - 60 000 ₽">50 000 ₽ - 60 000 ₽</option>
               <option value="60 000 ₽ - 70 000 ₽">60 000 ₽ - 70 000 ₽</option>
@@ -233,9 +261,6 @@ const clearError = (field) => {
               </option>
               <option value="От 200 000 ₽">От 200 000 ₽</option>
             </select>
-            <p v-if="!form.salary" class="text-red-500 text-sm mt-1">
-              Обязательно для заполнения
-            </p>
           </div>
 
           <div class="mb-4">
@@ -261,32 +286,42 @@ const clearError = (field) => {
 
           <div class="mb-4">
             <label for="company" class="block text-gray-700 font-bold mb-2"
-              >Название организации (ФИО ИП)</label
+              >Название организации (ФИО ИП) *</label
             >
             <input
               v-model="form.company.name"
+              @input="clearError('companyName')"
               type="text"
               id="company"
               name="company"
               class="border rounded w-full py-2 px-3"
+              :class="{ 'border-red-500': errors.companyName }"
               placeholder="Название организации (ФИО ИП)"
             />
+            <p v-if="errors.companyName" class="text-red-500 text-sm">
+              {{ errors.companyName }}
+            </p>
           </div>
 
           <div class="mb-4">
             <label
               for="company_description"
               class="block text-gray-700 font-bold mb-2"
-              >Сфера деятельности</label
+              >Сфера деятельности *</label
             >
             <textarea
               v-model="form.company.description"
+              @input="clearError('companyDescription')"
               id="company_description"
               name="company_description"
               class="border rounded w-full py-2 px-3"
+              :class="{ 'border-red-500': errors.companyDescription }"
               rows="4"
               placeholder="Чем занимается ваша компания?"
             ></textarea>
+            <p v-if="errors.companyDescription" class="text-red-500 text-sm">
+              {{ errors.companyDescription }}
+            </p>
           </div>
 
           <div class="mb-4">
