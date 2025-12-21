@@ -213,7 +213,7 @@ const updateJobInLocalStorage = () => {
 const handleSubmit = async () => {
   // Валидация формы
   if (!validateForm()) {
-    toast.error("Заполните обязательные поля")
+    toast.warning("Заполните обязательные поля")
     return
   }
 
