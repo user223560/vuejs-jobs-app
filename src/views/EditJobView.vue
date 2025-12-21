@@ -1,8 +1,13 @@
 <script setup>
-import { reactive, ref } from "vue"
+import { onMounted, reactive, ref } from "vue"
+import { useRoute } from "vue-router"
 import { useToast } from "vue-toastification"
 
 import router from "@/router"
+
+const route = useRoute()
+
+const jobId = route.params.id
 
 const form = reactive({
   type: "Полная занятость",
@@ -18,6 +23,11 @@ const form = reactive({
   },
 })
 
+const state = reactive({
+  isLoading: true,
+  error: null,
+})
+
 // Состояния ошибок для каждого поля
 const errors = ref({
   title: "",
@@ -29,6 +39,63 @@ const errors = ref({
 })
 
 const toast = useToast()
+
+// Функция загрузки вакансии для редактирования
+const loadJobForEdit = async () => {
+  state.isLoading = true
+  state.error = null
+
+  try {
+    // Поиск записи в LocalStorage
+    const storedData = localStorage.getItem("jobs_app_data")
+
+    if (!storedData) {
+      throw new Error("Нет данных в LocalStorage")
+    }
+
+    const data = JSON.parse(storedData)
+
+    if (!data.jobs || !Array.isArray(data.jobs)) {
+      throw new Error("Некорректный формат данных")
+    }
+
+    const foundJob = data.jobs.find((job) => job.id === jobId)
+
+    if (!foundJob) {
+      throw new Error("Вакансия не найдена")
+    }
+
+    // Проверяем, что это пользовательская вакансия
+    if (!foundJob.isUserJob) {
+      throw new Error("Демо-вакансии нельзя редактировать")
+    }
+
+    // Заполняем форму данными вакансии
+    form.type = foundJob.type || "Полная занятость"
+    form.title = foundJob.title || ""
+    form.description = foundJob.description || ""
+    form.salary = foundJob.salary || ""
+    form.location = foundJob.location || ""
+    form.company.name = foundJob.company?.name || ""
+    form.company.description = foundJob.company?.description || ""
+    form.company.contactEmail = foundJob.company?.contactEmail || ""
+    form.company.contactPhone = foundJob.company?.contactPhone || ""
+  } catch (error) {
+    console.error("Ошибка загрузки вакансии:", error)
+    state.error = error.message
+    toast.error(`Не удалось загрузить вакансию: ${error.message}`)
+
+    // Перенаправляем обратно, если вакансия не найдена
+    if (
+      error.message.includes("не найдена") ||
+      error.message.includes("Демо")
+    ) {
+      setTimeout(() => router.push("/jobs"), 1500)
+    }
+  } finally {
+    state.isLoading = false
+  }
+}
 
 // Валидация формы
 const validateForm = () => {
@@ -92,44 +159,53 @@ const isValidEmail = (email) => {
   return emailRegex.test(email)
 }
 
-// Функция сохранения вакансии в LocalStorage
-const saveJobToLocalStorage = (job) => {
+// Ф-ция обновления вакансии в LocalStorage
+const updateJobInLocalStorage = () => {
   try {
-    // Получаем текущие данные из LocalStorage
+    // Вытаскиваем текущие данные из LocalStorage
     const storedData = localStorage.getItem("jobs_app_data")
-    const data = storedData ? JSON.parse(storedData) : { jobs: [] }
 
-    // Генерируем уникальный ID по timestamp
-    const newId = Date.now().toString()
-
-    // Создаем объект вакансии
-    const newJob = {
-      id: newId,
-      type: job.type,
-      title: job.title,
-      description: job.description,
-      salary: job.salary,
-      location: job.location,
-      company: {
-        name: job.company.name,
-        description: job.company.description,
-        contactEmail: job.company.contactEmail,
-        contactPhone: job.company.contactPhone,
-      },
-      isUserJob: true, // Помечаем как пользовательскую
-      createdAt: new Date().toISOString(),
+    if (!storedData) {
+      throw new Error("Нет данных в LocalStorage")
     }
 
-    // Добавляем в массив
-    data.jobs.push(newJob)
+    const data = JSON.parse(storedData)
+
+    if (!data.jobs || !Array.isArray(data.jobs)) {
+      throw new Error("Некорректный формат данных")
+    }
+
+    // Ищем индекс вакансии для обновления
+    const jobIndex = data.jobs.findIndex((job) => job.id === jobId)
+
+    if (jobIndex === -1) {
+      throw new Error("Вакансия не найдена")
+    }
+
+    // Обновляем вакансию (сохраняем оригинальные поля и добавляем обновленные)
+    data.jobs[jobIndex] = {
+      ...data.jobs[jobIndex], // Сохраняем оригинальные данные (id, isUserJob, createdAt)
+      type: form.type,
+      title: form.title,
+      description: form.description,
+      salary: form.salary,
+      location: form.location,
+      company: {
+        name: form.company.name,
+        description: form.company.description,
+        contactEmail: form.company.contactEmail,
+        contactPhone: form.company.contactPhone,
+      },
+      updatedAt: new Date().toISOString(), // Добавляем время обновления
+    }
 
     // Сохраняем обратно в LocalStorage
     localStorage.setItem("jobs_app_data", JSON.stringify(data))
 
-    console.log("Вакансия сохранена в LocalStorage с ID:", newId)
-    return newId
+    console.log("Вакансия обновлена в LocalStorage с ID:", jobId)
+    return jobId
   } catch (error) {
-    console.error("Ошибка сохранения в LocalStorage:", error)
+    console.error("Ошибка обновления вакансии:", error)
     throw error
   }
 }
@@ -142,17 +218,17 @@ const handleSubmit = async () => {
   }
 
   try {
-    // Сохраняем в LocalStorage
-    const jobId = saveJobToLocalStorage(form)
+    // Обновляем вакансию в LocalStorage
+    updateJobInLocalStorage()
 
     // Показываем уведомление
-    toast.success("Вакансия успешно опубликована!")
+    toast.success("Вакансия успешно обновлена!")
 
-    // Перенаправляем на страницу созданной вакансии
+    // Перенаправляем на страницу вакансии
     router.push(`/jobs/${jobId}`)
   } catch (error) {
-    console.error("Ошибка добавления данных", error)
-    toast.error("Произошла ошибка при публикации вакансии")
+    console.error("Ошибка обновления данных", error)
+    toast.error("Произошла ошибка при обновлении вакансии")
   }
 }
 
@@ -162,19 +238,40 @@ const clearError = (field) => {
     errors.value[field] = ""
   }
 }
+
+onMounted(() => {
+  loadJobForEdit()
+})
 </script>
 
 <template>
   <section class="bg-green-50">
     <div class="container m-auto max-w-2xl py-24">
+      <div v-if="state.isLoading" class="text-center py-10">
+        <div
+          class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"
+        ></div>
+        <p class="mt-2 text-gray-600">Загрузка данных вакансии...</p>
+      </div>
+      <div v-else-if="state.error" class="text-center py-10">
+        <i class="bi bi-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+        <h2 class="text-xl font-bold text-red-600 mb-2">Ошибка</h2>
+        <p class="text-gray-700 mb-4">{{ state.error }}</p>
+        <button
+          @click="router.push('/jobs')"
+          class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Вернуться к списку вакансий
+        </button>
+      </div>
       <div
+        v-else
         class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"
       >
         <form @submit.prevent="handleSubmit" novalidate>
           <h2 class="text-3xl text-center font-semibold mb-6">
-            Добавление вакансии
+            Редактирование вакансии
           </h2>
-
           <div class="mb-4">
             <label for="type" class="block text-gray-700 font-bold mb-2"
               >Тип вакансии</label
@@ -184,7 +281,6 @@ const clearError = (field) => {
               id="type"
               name="type"
               class="border rounded w-full py-2 px-3"
-              :class="{ 'border-red-500': errors.title }"
             >
               <option value="Полная занятость">Полная занятость</option>
               <option value="Частичная занятость">Частичная занятость</option>
@@ -192,7 +288,6 @@ const clearError = (field) => {
               <option value="Стажировка">Стажировка</option>
             </select>
           </div>
-
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2"
               >Наименование должности *</label
@@ -203,7 +298,7 @@ const clearError = (field) => {
               type="text"
               id="name"
               name="name"
-              class="border rounded w-full py-2 px-3 mb-2"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.title }"
               placeholder="напр. Middle Frontend Developer"
             />
@@ -220,7 +315,7 @@ const clearError = (field) => {
               @input="clearError('description')"
               id="description"
               name="description"
-              class="border rounded w-full py-2 px-3"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.description }"
               rows="4"
               placeholder="Опишите требования, обязанности, ваши ожидания и т.д."
@@ -229,9 +324,8 @@ const clearError = (field) => {
               {{ errors.description }}
             </p>
           </div>
-
           <div class="mb-4">
-            <label for="type" class="block text-gray-700 font-bold mb-2"
+            <label for="salary" class="block text-gray-700 font-bold mb-2"
               >Зарплата</label
             >
             <select
@@ -262,7 +356,6 @@ const clearError = (field) => {
               <option value="От 200 000 ₽">От 200 000 ₽</option>
             </select>
           </div>
-
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2">
               Место работы *
@@ -273,7 +366,7 @@ const clearError = (field) => {
               type="text"
               id="location"
               name="location"
-              class="border rounded w-full py-2 px-3 mb-2"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.location }"
               placeholder="Местонахождение компании"
             />
@@ -281,9 +374,7 @@ const clearError = (field) => {
               {{ errors.location }}
             </p>
           </div>
-
           <h3 class="text-2xl mb-5">Информация о работодателе</h3>
-
           <div class="mb-4">
             <label for="company" class="block text-gray-700 font-bold mb-2"
               >Название организации (ФИО ИП) *</label
@@ -294,7 +385,7 @@ const clearError = (field) => {
               type="text"
               id="company"
               name="company"
-              class="border rounded w-full py-2 px-3"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.companyName }"
               placeholder="напр. ПАО «Сбербанк России» или ИП Иванов Иван И."
             />
@@ -302,19 +393,18 @@ const clearError = (field) => {
               {{ errors.companyName }}
             </p>
           </div>
-
           <div class="mb-4">
             <label
               for="company_description"
               class="block text-gray-700 font-bold mb-2"
-              >Сфера деятельности *</label
+              >Сфера деятельности организации *</label
             >
             <textarea
               v-model="form.company.description"
               @input="clearError('companyDescription')"
               id="company_description"
               name="company_description"
-              class="border rounded w-full py-2 px-3"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.companyDescription }"
               rows="4"
               placeholder="Чем занимается ваша компания?"
@@ -323,7 +413,6 @@ const clearError = (field) => {
               {{ errors.companyDescription }}
             </p>
           </div>
-
           <div class="mb-4">
             <label
               for="contact_email"
@@ -336,7 +425,7 @@ const clearError = (field) => {
               type="email"
               id="contact_email"
               name="contact_email"
-              class="border rounded w-full py-2 px-3"
+              class="border rounded w-full py-2 px-3 mb-1"
               :class="{ 'border-red-500': errors.contactEmail }"
               placeholder="Электронная почта для соискателей"
             />
@@ -359,17 +448,22 @@ const clearError = (field) => {
               placeholder="Телефон для соискателей"
             />
           </div>
-
           <div class="text-sm text-gray-500 mb-4">
             <p>* — обязательные для заполнения поля</p>
           </div>
-
-          <div>
+          <div class="flex gap-4">
             <button
-              class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
-              type="submit"
+              type="button"
+              @click="router.push(`/jobs/${jobId}`)"
+              class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
             >
-              Разместить вакансию
+              Отмена
+            </button>
+            <button
+              type="submit"
+              class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+            >
+              Сохранить изменения
             </button>
           </div>
         </form>
