@@ -1,19 +1,34 @@
-# .
+# Проект "ИщуРаботу.ру"
 
-This template should help get you started developing with Vue 3 in Vite.
+### Посмотреть можно здесь:
 
-## Recommended IDE Setup
+<a href="" target="_blank"></a>
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Что использовалось в разработке
 
-## Recommended Browser Setup
+<p>Кодовая база - фреймворк <b>Vue.js</b>, стилизация - фреймворк <b>Tailwind CSS</b></p>
+<p>Вспомогательные инструменты:</p>
+<ul>
+  <li><b>Vue Router</b> - навигация по страницам</li>
+  <li><b>Vue Spinner</b> - анимация загрузки</li>
+  <li><b>Vue Toastification</b> - окна уведомлений</li>
+  <li><b>Bootstrap Icons</b> - иконки</li>
+</ul>
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Функционал приложения
+
+<p>Данный "веб-сервис для соискателей и работодателей" представляет из себя <b>SPA</b>, в котором реализована имитация работы с бэкендом. Для этого используется сочетание работы с локальным JSON-файлом и с <b><code>localStorage</code></b>.</p>
+<p>Для "соискателей" предусмотрен просмотр вакансий, для "работодателей" - размещение и редактирование вакансий.</p>
+<p>Функции изменения и удаления доступны только для вакансий, созданных "работодателем" (операции с <code>localStorage</code>). Вакансии, существующие "по умолчанию" (достающиеся из JSON-файла) изменять нельзя.</p>
+
+### Прочие особенности
+
+<ul>
+  <li>Использование <code>Composition API</code></li>
+  <li>Предусмотрена обработка различных ошибок, для чего создан отдельный компонент</li>
+  <li>В вёрстке применяются, помимо прочего, <b>Grid</b>, <b>Flexbox</b>, семантические теги</li>
+  <li>Приложение адаптировано под экраны мобильных устройств</li>
+</ul>
 
 ## Customize configuration
 
