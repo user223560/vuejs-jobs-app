@@ -2,7 +2,7 @@
 
 ### Посмотреть можно здесь:
 
-<a href="" target="_blank"></a>
+<a href="https://search-jobs-dotru.netlify.app/" target="_blank">https://search-jobs-dotru.netlify.app/</a>
 
 ## Что использовалось в разработке
 
