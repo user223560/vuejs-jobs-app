@@ -2,63 +2,33 @@ name: Deploy Vue App to GitHub Pages
 
 on:
   push:
-    branches: ["master"] # или "main"
+    branches: ["master"]
 
-# ВАЖНО: Разрешения для GitHub Pages
 permissions:
-  contents: read
   pages: write
   id-token: write
 
 jobs:
   build:
-    runs-on: ubuntu-latest # сервер GitHub, на котором будет работать проект
-
+    runs-on: ubuntu-latest
     steps:
-      # 1. Получить код из репозитория
-      - name: Checkout
-        uses: actions/checkout@v4 # Скачивание кода из соотв. репо на GitHub
-
-      # 2. Установить Node.js
-      - name: Setup Node
-        uses: actions/setup-node@v4 # Установка Node.js на Ubuntu VM (сервер GitHub)
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-
-      # 3. Установить зависимости
-      - name: Install dependencies
-        run: npm ci # Выполняется на Ubuntu VM
-
-      # 4. Собрать проект
-      - name: Build
-        run: npm run build # Выполняется на Ubuntu VM
-
-      # 5. Создать 404.html для SPA роутинга
-      - name: Create 404.html for SPA
-        run: |
-          cp dist/index.html dist/404.html
-
-      # 6. Настроить GitHub Pages (ДОБАВЬТЕ!)
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - run: npm ci && npm run build
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
         with:
-          enablement: true
-
-      # 7. Загрузить собранные файлы как артефакт
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "./dist"
+          path: ./dist
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build # Ждём завершения сборки
+    needs: build
     steps:
-      # 8. Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
