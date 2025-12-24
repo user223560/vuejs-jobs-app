@@ -19,6 +19,6 @@ export default defineConfig({
     },
   },
   base: process.env.NODE_ENV === 'production'
-    ? 'vuejs-jobs-app'
+    ? '/vuejs-jobs-app/'
     : '/'
 })
