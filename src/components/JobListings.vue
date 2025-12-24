@@ -27,7 +27,7 @@ const loadJobs = async () => {
 
   try {
     // Загружаем данные из json-файла
-    const response = await fetch("/data/jobs.json")
+    const response = await fetch(`${import.meta.env.BASE_URL}data/jobs.json`)
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки данных: ${response.status}`)
