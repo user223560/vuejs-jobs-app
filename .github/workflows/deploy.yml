@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4 # Установка Node.js на Ubuntu VM (сервер GitHub)
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "npm"
 
       # 3. Установить зависимости
