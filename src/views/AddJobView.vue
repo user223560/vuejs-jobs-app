@@ -16,7 +16,7 @@ const state = reactive({
 const checkServerConnection = async () => {
   state.isLoading = true
   try {
-    const response = await fetch("/data/jobs.json")
+    const response = await fetch(`${import.meta.env.BASE_URL}data/jobs.json`)
     if (!response.ok) {
       throw new Error(`Ошибка соединения: ${response.status}`)
     }
