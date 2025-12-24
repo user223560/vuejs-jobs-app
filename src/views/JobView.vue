@@ -42,7 +42,7 @@ const loadJob = async (id) => {
 
     // Если там нет, ищем в JSON файле
     if (!foundJob) {
-      const response = await fetch("/data/jobs.json")
+      const response = await fetch(`${import.meta.env.BASE_URL}data/jobs.json`)
 
       if (!response.ok) {
         throw new Error(`Ошибка загрузки: ${response.status}`)
