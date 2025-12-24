@@ -1,9 +1,5 @@
 # Проект "ИщуРаботу.ру"
 
-### Посмотреть можно здесь:
-
-<a href="https://search-jobs-dotru.netlify.app/" target="_blank">https://search-jobs-dotru.netlify.app/</a>
-
 ## Что использовалось в разработке
 
 <p>Кодовая база - фреймворк <b>Vue.js</b>, стилизация - фреймворк <b>Tailwind CSS</b></p>
