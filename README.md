@@ -1,5 +1,9 @@
 # Проект "ИщуРаботу.ру"
 
+### Посмотреть можно здесь:
+
+<a href="https://user223560.github.io/vuejs-jobs-app/" target="_blank">https://user223560.github.io/vuejs-jobs-app/</a>
+
 ## Что использовалось в разработке
 
 <p>Кодовая база - фреймворк <b>Vue.js</b>, стилизация - фреймворк <b>Tailwind CSS</b></p>
